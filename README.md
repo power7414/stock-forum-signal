@@ -29,6 +29,12 @@ preprocess/   filtering, labeling and feature scripts
 modeling/     data_process.py (team data prep), stock_project.ipynb (models + backtest), llm_predict.py (TAIDE)
 ```
 
-## Data
-The course dataset (forum posts and stock prices provided by the instructor) is **not included** and may not be redistributed.
-Scripts expect it under `data/`. Notebook outputs were cleared for the same reason.
+## Data and how the pieces connect
+The course dataset (forum posts and stock prices provided by the instructor) is **not included** and may not be redistributed; notebook outputs were cleared for the same reason.
+
+This is the code as the team used it, not a one-command pipeline:
+- `preprocess/` scripts read the raw course CSVs and write their outputs to the working directory.
+- `modeling/stock_project.ipynb` reads feature/label files (`5d_3_trend_y.csv`, `5d_3_trend_time.csv`, `5d_3_trend_source.csv`, …) that a teammate exported from the vectorization step; that export script is not in this repo.
+- `modeling/llm_predict.py` expects a prepared `train_n20.jsonl` (posts with 20-day labels), also produced outside this repo.
+
+Results above are from the team's runs and final presentation.
