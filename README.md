@@ -1,0 +1,34 @@
+# Can forum and news posts predict a stock's direction?
+
+Team project (6 members) for *Big Data and Business Analytics*, National Taiwan University, spring 2025.
+Target stock: Innolux (TWSE: 3481).
+
+## What it does
+1. **Filter** — keep posts that mention the company (keywords such as 群創, 3481, INNOLUX, 面板雙虎): 9,139 posts from PTT and news.
+2. **Label** — tag each post up / down / flat by the price move *N* trading days later at several thresholds (±1%, ±3%, ±5%; N = 1, 5, 10, 20).
+3. **Features** — Chinese word segmentation, n-grams, chi-square keyword scoring and TF-IDF vectors.
+4. **Models** — six classifiers (RF, NB, SVM, XGBoost, KNN, DT) and soft-voting ensembles.
+5. **Rolling backtest** — each day, train on the previous three months of posts and predict the day-5 direction; only act when the predicted probabilities differ by at least the confidence threshold.
+6. **LLM comparison** — zero-shot labels from TAIDE-LX-7B-Chat.
+
+## Results
+| Setting | Accuracy |
+|---|---|
+| Best single model (random forest), held-out test split | 69.17% |
+| Ensemble RF + NB + XGBoost, held-out test split | **70.49%** |
+| Same ensemble, day-by-day rolling backtest 2023-01 → 2025-02 (confidence 0.3; 3,407 of 4,963 days acted on) | **59.99%** |
+
+The backtest is the stricter number: it only uses information available before each prediction.
+
+## My part
+Preprocessing (`preprocess/`): keyword filtering, price-move labeling, n-gram / TF-IDF / chi-square features.
+
+## Layout
+```
+preprocess/   filtering, labeling and feature scripts
+modeling/     data_process.py (team data prep), stock_project.ipynb (models + backtest), llm_predict.py (TAIDE)
+```
+
+## Data
+The course dataset (forum posts and stock prices provided by the instructor) is **not included** and may not be redistributed.
+Scripts expect it under `data/`. Notebook outputs were cleared for the same reason.
