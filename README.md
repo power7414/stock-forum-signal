@@ -16,9 +16,18 @@ Target stock: Innolux (TWSE: 3481).
 |---|---|
 | Best single model (random forest), held-out test split | 69.17% |
 | Ensemble RF + NB + XGBoost, held-out test split | **70.49%** |
-| Same ensemble, day-by-day rolling backtest 2023-01 → 2025-02 (confidence 0.3; 3,407 of 4,963 days acted on) | **59.99%** |
+| Same ensemble, day-by-day rolling backtest 2023-01 → 2025-02 (confidence 0.3; acted on 3,407 of 4,963 post-level predictions) | **59.99%** |
 
 The backtest is the stricter number: it only uses information available before each prediction.
+
+## Known limitations
+These are course-project numbers and are likely optimistic:
+- The 70% figures use a random train/test split. Posts from the same days share overlapping 5-day labels, so the split is not independent in time.
+- Chi-square keyword selection was fitted on all data before the split.
+- In the rolling backtest, the most recent training posts are labeled with prices that were not yet known on the prediction day, and the confidence threshold was chosen on the same period.
+- There is no majority-class baseline in the table.
+
+A time-ordered re-evaluation (selection inside the training window, an embargo on unresolved labels, and a majority baseline) is planned.
 
 ## My part
 Preprocessing (`preprocess/`): keyword filtering, price-move labeling, n-gram / TF-IDF / chi-square features.
